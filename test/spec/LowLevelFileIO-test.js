@@ -858,89 +858,82 @@ define(function (require, exports, module) {
                 fileName = baseDir + "/optional.txt",
                 contents = "This content was generated from LowLevelFileIO-test.js";
             
-            beforeEach(function () {
-                complete = false;
-            });
+            it("should call the native function without arguments", function () {
             
-            runs(function () {
-                brackets.fs.makedir(optName, parseInt("777", 0));
-            });
-            
-            setTimeout(function () {
-                brackets.fs.stat(optName, function (err, stat) {
-                    expect(stat.isDirectory()).toBeTruthy();
-                    complete = true;
+                beforeEach(function () {
+                    complete = false;
                 });
-            }, 1000);
-
-            waitsFor(function () { return complete; }, "creating folder without a callback", 2000);
-               
-            runs(function () {
-                brackets.fs.rename(optName, newName);
-            });
-    
-            setTimeout(function () {
-                brackets.fs.stat(optName, function (err, stat) {
-                    expect(stat.isDirectory()).toBeTruthy();
-                    complete = true;
-                });
-            }, 1000);
-
-            waitsFor(function () { return complete; }, "renaming folder without a callback", 2000);
-            
-            runs(function () {
-                brackets.fs.unlink(newName);
-            });
-            
-            setTimeout(function () {
-                brackets.fs.stat(newName, function (err, stat) {
-                    expect(err).toBe(brackets.fs.ERR_NOT_FOUND);
-                    complete = true;
-                });
-            }, 1000);
                 
-            waitsFor(function () { return complete; }, "deleting folder without a callback", 2000);
-            
-            runs(function () {
-                brackets.fs.writeFile(fileName, contents, _FSEncodings.UTF8);
-            });
+                runs(function () {
+                    brackets.fs.makedir(optName, parseInt("777", 0));
+
+                    setTimeout(function () {
+                        brackets.fs.stat(optName, function (err, stat) {
+                            expect(stat.isDirectory()).toBeTruthy();
+                            complete = true;
+                        });
+                    }, 1000);
         
-            setTimeout(function () {
-                brackets.fs.stat(fileName, function (err, stat) {
-                    expect(err).toBe(brackets.fs.NO_ERROR);
-                    complete = true;
                 });
-            }, 3000);
-            
-            waitsFor(function () { return complete; }, "creating a file without a callback", 4000);
-
-            runs(function () {
-                brackets.fs.moveToTrash(fileName);
-            });
-            
-            setTimeout(function () {
-                brackets.fs.stat(fileName, function (err, stat) {
-                    expect(err).toBe(brackets.fs.ERR_NOT_FOUND);
-                    complete = true;
-                });
-            }, 1000);
                 
-            waitsFor(function () { return complete; }, "recycling a file without a callback", 2000);
+                waitsFor(function () { return complete; }, "creating folder without a callback", 2000);
+                   
+                runs(function () {
+                    brackets.fs.rename(optName, newName);
 
-// todo -- this doesn't work because it deletes the folder at the wrong tiem and tests start failing randomly need 
-//          to find a way to delete the temp folder predictably            
-//            runs(function () {
-//                brackets.fs.unlink(baseDir);
-//            });
-//            
-//            setTimeout(function () {
-//                brackets.fs.stat(baseDir, function (err, stat) {
-//                    expect(err).toBe(brackets.fs.ERR_NOT_FOUND);
-//                    complete = true;
-//                });
-//            }, 1000);
-//                
-//            waitsFor(function () { return complete; }, "Deleting a folder without a callback", 2000);
+                    setTimeout(function () {
+                        brackets.fs.stat(optName, function (err, stat) {
+                            expect(stat.isDirectory()).toBeTruthy();
+                            complete = true;
+                        });
+                    }, 1000);
+    
+                });
+        
+                waitsFor(function () { return complete; }, "renaming folder without a callback", 2000);
+                
+                runs(function () {
+                    brackets.fs.unlink(newName);
+                    
+                    setTimeout(function () {
+                        brackets.fs.stat(newName, function (err, stat) {
+                            expect(err).toBe(brackets.fs.ERR_NOT_FOUND);
+                            complete = true;
+                        });
+                    }, 1000);
+                });
+                
+                    
+                waitsFor(function () { return complete; }, "deleting folder without a callback", 2000);
+                
+                runs(function () {
+                    brackets.fs.writeFile(fileName, contents, _FSEncodings.UTF8);
+                    
+                    setTimeout(function () {
+                        brackets.fs.stat(fileName, function (err, stat) {
+                            expect(err).toBe(brackets.fs.NO_ERROR);
+                            complete = true;
+                        });
+                    }, 3000);
+                });
+            
+                
+                waitsFor(function () { return complete; }, "creating a file without a callback", 4000);
+    
+                runs(function () {
+                    brackets.fs.moveToTrash(fileName);
+                    
+                    setTimeout(function () {
+                        brackets.fs.stat(fileName, function (err, stat) {
+                            expect(err).toBe(brackets.fs.ERR_NOT_FOUND);
+                            complete = true;
+                        });
+                    }, 1000);
+                        
+                });
+                
+                waitsFor(function () { return complete; }, "recycling a file without a callback", 2000);
+            });
         });
                 
     });
