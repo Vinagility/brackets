@@ -46,16 +46,17 @@ define(function (require, exports, module) {
                 var testFiles = SpecRunnerUtils.getTestPath("/spec/LowLevelFileIO-test-files");
                 waitsForDone(SpecRunnerUtils.copyPath(testFiles, baseDir));
             });
-
             runs(function () {
-                // Pre-test setup - set permissions on special directories 
                 waitsForDone(SpecRunnerUtils.chmod(baseDir + "/cant_read_here", "222"));
                 waitsForDone(SpecRunnerUtils.chmod(baseDir + "/cant_write_here", "444"));
             });
         });
 
         afterEach(function () {
-            // Restore directory permissions
+            runs(function () {
+                waitsForDone(SpecRunnerUtils.chmod(baseDir + "/cant_read_here", "777"));
+                waitsForDone(SpecRunnerUtils.chmod(baseDir + "/cant_write_here", "777"));
+            });
             runs(function () {
                 waitsForDone(SpecRunnerUtils.deletePath(baseDir));
             });
