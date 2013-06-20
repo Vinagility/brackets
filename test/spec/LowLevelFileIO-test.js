@@ -859,7 +859,7 @@ define(function (require, exports, module) {
                 fileName = baseDir + "/optional.txt",
                 contents = "This content was generated from LowLevelFileIO-test.js";
             
-            it("should call the native function without arguments", function () {
+            it("should be able to call the brackets filesystem without a callback", function () {
             
                 beforeEach(function () {
                     complete = false;
